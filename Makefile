@@ -9,6 +9,10 @@ start:
 	uv run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 render-start:
+	# Install gunicorn if not already installed
+	@pip show gunicorn || pip install gunicorn
+	gunicorn --version
+	# Start the application with gunicorn
 	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
 
 build:
