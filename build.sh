@@ -6,3 +6,6 @@ source $HOME/.local/bin/env
 make install
 
 source .venv/bin/activate
+
+chmod +x debug.sh  # Ensure the script is executable
+./debug.sh  # Run the debug script
