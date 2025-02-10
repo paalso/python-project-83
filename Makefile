@@ -10,7 +10,9 @@ start:
 
 render-start:
 	# Install gunicorn if not already installed
-	@pip show gunicorn || pip install gunicorn
+	pip show gunicorn || pip install gunicorn
+    # Add gunicorn installation path to PATH
+	export PATH=$PATH:/opt/render/.local/bin
 	gunicorn --version
 	# Start the application with gunicorn
 	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
