@@ -1,9 +1,5 @@
 from flask import Flask
+from page_analyzer.routes import routes
 
 app = Flask(__name__)
-
-
-@app.route('/')
-@app.route('/index')
-def index():
-    return 'Hello from Flask!'
+app.register_blueprint(routes)
