@@ -20,6 +20,13 @@ def urls():
     )
 
 
+@routes.route('/urls/<int:id>')
+def url_info(id):
+    return render_template(
+        '/url.html'
+    )
+
+
 @routes.post('/urls')
 def urls_post():
     return 'Trying to post!'
