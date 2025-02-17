@@ -18,3 +18,8 @@ def urls():
         '/urls.html',
         urls=data
     )
+
+
+@routes.post('/urls')
+def urls_post():
+    return 'Trying to post!'
