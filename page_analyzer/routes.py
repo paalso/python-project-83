@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template
-from page_analyzer.tmp_dummy_data import data
 from page_analyzer.db import get_db
+from page_analyzer.repository import Repository
 
 routes = Blueprint('routes', __name__)
 conn = get_db()
+repo = Repository(conn)
 
 
 @routes.route('/')
@@ -14,7 +15,8 @@ def index():
 
 @routes.route('/urls')
 def urls():
-    return render_template('/urls.html', urls=data)
+    urls = repo.get_content()
+    return render_template('/urls.html', urls=urls)
 
 
 @routes.route('/urls/<int:id>')
