@@ -3,6 +3,8 @@ from page_analyzer.tmp_dummy_data import data
 from page_analyzer.db import get_db
 
 routes = Blueprint('routes', __name__)
+conn = get_db()
+
 
 @routes.route('/')
 @routes.route('/index')
@@ -12,7 +14,6 @@ def index():
 
 @routes.route('/urls')
 def urls():
-    conn = get_db()  # Получаем соединение с БД
     return render_template('/urls.html', urls=data)
 
 
