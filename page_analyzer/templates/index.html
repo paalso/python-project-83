@@ -9,10 +9,10 @@
       <div class="card bg-light p-3">
         <div class="card-body">
           <h1 class="card-title">Анализатор страниц</h1>
-          <form class="p-3 rounded" action="{{ url_for('routes.urls_post') }}", method="post">
+          <form class="p-3 rounded" action="{{ url_for('routes.urls_post') }}" method="post">
             <label for="text" class="sr-only mb-2">Бесплатно проверяйте сайты на SEO-пригодность</label>
             <div class="d-flex">
-              <input type="url" class="form-control" id="text" name="url" placeholder="https://www.example.com"
+              <input type="text" class="form-control" id="text" name="url" placeholder="https://www.example.com"
                 required>
               <input type="submit" class="btn btn-primary ms-3 text-uppercase" value="Проверить">
             </div>
@@ -22,4 +22,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
