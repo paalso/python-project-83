@@ -1,6 +1,19 @@
-from flask import Blueprint, render_template
+from flask import (
+    Blueprint,
+    flash,
+    get_flashed_messages,
+    render_template,
+    request
+)
 from page_analyzer.db import get_db
 from page_analyzer.repository import Repository
+from page_analyzer.validator import validate_url
+
+
+def flash_errors(errors, key):
+    for error in errors.get(key, []):
+        flash(error, 'error')
+
 
 routes = Blueprint('routes', __name__)
 conn = get_db()
@@ -26,7 +39,17 @@ def url_info(id):
 
 @routes.post('/urls')
 def urls_post():
-    return ('Trying to post!')
+    data = request.form.to_dict()
+    url = data.get('url')
+    errors = validate_url(url)
+    if errors:
+        flash_errors(errors, 'url')
+        messages = get_flashed_messages(with_categories=True)
+        return render_template(
+            'index.html',
+            messages=messages
+        )
+    return 'All right!!!'
 
 
 # TODO: remove after debugging
