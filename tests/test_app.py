@@ -24,8 +24,8 @@ def test_homepage_content_and_url_validation(client):
 
     incorrect_url_answer = 'Некорректный URL'
     extremely_long_url_answer = 'URL превышает 255 символов'
-    moderately_long_valid_url = 'https://www.example.com/' + 'a' * 231
-    extremely_long_url = 'https://www.example.com/' + 'a' * 232
+    valid_url = 'https://www.example.com'
+    extremely_long_url = 'https://www.' + 'a' * 240 + '.net'
 
     response = client.post('/urls', data={'url': 'invalid-url'})
     assert incorrect_url_answer in response.text
@@ -35,7 +35,7 @@ def test_homepage_content_and_url_validation(client):
     assert extremely_long_url_answer in response.text
     assert incorrect_url_answer not in response.text
 
-    response = client.post('/urls', data={'url': moderately_long_valid_url})
+    response = client.post('/urls', data={'url': valid_url})
     assert response.status_code == 200
     assert incorrect_url_answer not in response.text
     assert extremely_long_url_answer not in response.text
