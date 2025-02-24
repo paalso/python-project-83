@@ -8,6 +8,7 @@ from flask import (
 )
 from page_analyzer.db import get_db
 from page_analyzer.urls_repository import UrlsRepository
+from page_analyzer.url_checks_repository import UrlChecksRepository
 from page_analyzer.validator import validate_url
 from urllib.parse import urlparse
 
@@ -30,7 +31,8 @@ def normalize_url(url):
 
 routes = Blueprint('routes', __name__)
 conn = get_db()
-repo = UrlsRepository(conn)
+urls_repo = UrlsRepository(conn)
+urls_checks_repo = UrlChecksRepository(conn)
 
 
 @routes.route('/')
@@ -41,25 +43,28 @@ def index():
 
 @routes.route('/urls')
 def urls():
-    urls = repo.get_content()
+    urls = urls_repo.get_content()
     return render_template('urls.html', urls=urls)
 
 
 @routes.route('/urls/<int:id>')
-def url_info(id):
-    url = repo.find(id)
-    if url:
-        return render_template(
-            'url.html',
-            url_record=url
-        )
-    return render_template('not_found_url.html'), 404
+def show_url(id):
+    url_info = urls_repo.find(id)
+    if not url_info:
+        return render_template('not_found_url.html'), 404
+
+    url_checks = urls_checks_repo.get_by_url_id(id)
+    return render_template(
+        'url.html',
+        url_info=url_info,
+        url_checks=url_checks
+    )
 
 
 @routes.post('/urls')
 def urls_post():
     data = request.form.to_dict()
-    url = data.get('url')
+    url = data.get('url').strip()
     errors = validate_url(url)
     if errors:
         flash_errors(errors, 'url')
@@ -71,7 +76,7 @@ def urls_post():
         )
 
     normalized_url = normalize_url(url)
-    new_url_record = repo.create(normalized_url)
+    new_url_record = urls_repo.create(normalized_url)
     flash('Страница успешно добавлена', 'success')
     if new_url_record:
         return render_template(
@@ -83,8 +88,17 @@ def urls_post():
 
 
 @routes.post('/urls/<int:id>/checks')
-def check_url(id):
-    return f'Checking url with {id}...'
+def create_url_check(id):
+    urls_checks_repo.create(id)
+    url_info = urls_repo.find(id)
+    url_checks = urls_checks_repo.get_by_url_id(id)
+    flash('Страница успешно проверена', 'success')
+    return render_template(
+        'url.html',
+        url_info=url_info,
+        url_checks=url_checks,
+        messages = get_flashed_messages(with_categories=True)
+    )
 
 
 # TODO: remove after debugging
@@ -95,7 +109,7 @@ def get_conn():
 
 @routes.route('/urls/find/<path:url>')
 def url_by_name(url):
-    result = repo.find_by_field("name", url)
+    result = urls_repo.find_by_field("name", url)
     if result:
         return jsonify(result), 200
     return jsonify({"error": "URL not found"}), 404
