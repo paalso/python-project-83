@@ -6,20 +6,20 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-9">
-      <h1>Сайт: <a href="{{ url_record.name }}">{{ url_record.name }}</a></h1>
+      <h1>Сайт: <a href="{{ url_info.name }}">{{ url_info.name }}</a></h1>
       <div class="table-responsive">
          <table class="table table-bordered table-hover text-nowrap" data-test="url">
           <tr>
             <td style="width: 30%;">ID</td>
-            <td style="width: 70%;">{{ url_record.id }}</td>
+            <td style="width: 70%;">{{ url_info.id }}</td>
           </tr>
           <tr>
             <td>Имя</td>
-            <td>{{ url_record.name }}</td>
+            <td>{{ url_info.name }}</td>
           </tr>
           <tr>
             <td>Дата создания</td>
-            <td>{{ url_record.created_at.strftime('%Y-%m-%d') }}</td>
+            <td>{{ url_info.created_at.strftime('%Y-%m-%d') }}</td>
           </tr>
         </table>
       </div>
@@ -27,18 +27,30 @@
   </div>
   <div class="row mt-5">
     <h2>Проверки</h2>
-    <form method="post" action="{{ url_for('routes.check_url', id=url_record.id) }}">
+    <form method="post" action="{{ url_for('routes.create_url_check', id=url_info.id) }}">
       <input type="submit" class="btn btn-primary" value="Запустить проверку">
     </form>
-    <table class="table table-bordered mt-2">
+    <table class="table table-bordered table-hover mt-2" data-test="checks">
         <thead>
-        <th style="width: 10%;">ID</th>
-        <th style="width: 10%;">Код ответа</th>
-        <th style="width: 10%;">h1</th>
-        <th style="width: 20%;">title</th>
-        <th style="width: 30%;">description</th>
-        <th style="width: 20%;">Дата создания</th>
+          <th style="width: 10%;">ID</th>
+          <th style="width: 10%;">Код ответа</th>
+          <th style="width: 10%;">h1</th>
+          <th style="width: 20%;">title</th>
+          <th style="width: 30%;">description</th>
+          <th style="width: 20%;">Дата создания</th>
         </thead>
+        <tbody>
+          {% for url_check in url_checks %}
+            <tr>
+              <td>{{ url_check.id }}</td>
+              <td>{{ url_check.status_code }}</td>
+              <td>{{ url_check.h1 }}</td>
+              <td>{{ url_check.title }}</td>
+              <td>{{ url_check.description }}</td>
+              <td>{{ url_check.created_at.strftime('%Y-%m-%d') }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
       </table>
   </div>
 </div>
