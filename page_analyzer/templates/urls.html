@@ -7,22 +7,24 @@
   <div class="row justify-content-center">
     <div class="col-10">
       <h1 class="mt-4">Сайты</h1>
-      <table class="table table-bordered">
-        <thead>
-        <th style="width: 10%;">ID</th>
-        <th style="width: 50%;">Имя</th>
-        <th style="width: 25%;">Последняя проверка</th>
-        <th style="width: 15%;">Код ответа</th>
-        </thead>
-        {% for url in urls %}
-        <tr>
-          <td>{{url.id}}</td>
-          <td><a href="{{ url.name }}">{{url.name}}</a></td>
-          <td>{{url.last_check}}</td>
-          <td>{{url.response_code}}</td>
-        </tr>
-        {% endfor %}
-      </table>
+      <div class="table-responsive">
+        </div>
+         <table class="table table-bordered table-hover text-nowrap" data-test="url">
+          <thead>
+          <th style="width: 10%;">ID</th>
+          <th style="width: 50%;">Имя</th>
+          <th style="width: 25%;">Последняя проверка</th>
+          <th style="width: 15%;">Код ответа</th>
+          </thead>
+          {% for url in urls %}
+          <tr>
+            <td>{{url.id}}</td>
+            <td><a href="{{ url_for('routes.url_info', id=url.id) }}">{{ url.name }}</a></td>
+            <td>{{url.last_check}}</td>
+            <td>{{url.response_code}}</td>
+          </tr>
+          {% endfor %}
+        </table>
     </div>
   </div>
 </div>
