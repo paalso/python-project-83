@@ -13,7 +13,7 @@
           <form class="p-3 rounded" action="{{ url_for('routes.urls_post') }}" method="post">
             <label for="text" class="visually-hidden">Url для проверки</label>
             <div class="d-flex">
-              <input type="text" class="form-control" id="text" name="url" placeholder="https://www.example.com"
+              <input type="text" class="form-control" id="text" name="url" placeholder="https://www.example.com" value="{{ url }} "
                 required>
               <input type="submit" class="btn btn-primary ms-3 text-uppercase" value="Проверить">
             </div>
