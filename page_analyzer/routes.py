@@ -7,7 +7,7 @@ from flask import (
     request
 )
 from page_analyzer.db import get_db
-from page_analyzer.repository import Repository
+from page_analyzer.urls_repository import UrlsRepository
 from page_analyzer.validator import validate_url
 from urllib.parse import urlparse
 
@@ -30,7 +30,7 @@ def normalize_url(url):
 
 routes = Blueprint('routes', __name__)
 conn = get_db()
-repo = Repository(conn)
+repo = UrlsRepository(conn)
 
 
 @routes.route('/')

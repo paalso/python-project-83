@@ -1,7 +1,7 @@
 from psycopg2.extras import DictCursor
 
 
-class Repository:
+class UrlsRepository:
     def __init__(self, conn):
         self.conn = conn
 
