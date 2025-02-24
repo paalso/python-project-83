@@ -42,13 +42,18 @@ def index():
 @routes.route('/urls')
 def urls():
     urls = repo.get_content()
-    return render_template('/urls.html', urls=urls)
+    return render_template('urls.html', urls=urls)
 
 
 @routes.route('/urls/<int:id>')
 def url_info(id):
     url = repo.find(id)
-    return url
+    if url:
+        return render_template(
+            'url.html',
+            url_record=url
+        )
+    return render_template('not_found_url.html'), 404
 
 
 @routes.post('/urls')
@@ -70,7 +75,7 @@ def urls_post():
     flash('Страница успешно добавлена', 'success')
     if new_url_record:
         return render_template(
-            '/url.html',
+            'url.html',
             url_record=new_url_record,
             messages = get_flashed_messages(with_categories=True)
         )
