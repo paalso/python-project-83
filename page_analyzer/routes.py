@@ -2,13 +2,11 @@ from flask import (
     Blueprint,
     flash,
     get_flashed_messages,
-    jsonify,
     render_template,
     request
 )
 from page_analyzer.db import get_db
-from page_analyzer.urls_repository import UrlsRepository
-from page_analyzer.url_checks_repository import UrlChecksRepository
+from page_analyzer.repositories import UrlsRepository, UrlChecksRepository
 from page_analyzer.validator import validate_url
 from urllib.parse import urlparse
 
@@ -76,7 +74,7 @@ def urls_post():
         )
 
     normalized_url = normalize_url(url)
-    new_url_record = urls_repo.create(normalized_url)
+    new_url_record = urls_repo.save(normalized_url)
     flash('Страница успешно добавлена', 'success')
     if new_url_record:
         return render_template(
@@ -89,7 +87,7 @@ def urls_post():
 
 @routes.post('/urls/<int:id>/checks')
 def create_url_check(id):
-    urls_checks_repo.create(id)
+    urls_checks_repo.save(id)
     url_info = urls_repo.find(id)
     url_checks = urls_checks_repo.get_by_url_id(id)
     flash('Страница успешно проверена', 'success')
@@ -105,11 +103,3 @@ def create_url_check(id):
 @routes.route('/conn')
 def get_conn():
     return str(id(conn))
-
-
-@routes.route('/urls/find/<path:url>')
-def url_by_name(url):
-    result = urls_repo.find_by_field("name", url)
-    if result:
-        return jsonify(result), 200
-    return jsonify({"error": "URL not found"}), 404
