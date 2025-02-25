@@ -5,12 +5,7 @@ class UrlChecksRepository:
     def __init__(self, conn):
         self.conn = conn
 
-    def get_content(self):
-        with self.conn.cursor(cursor_factory=DictCursor) as cursor:
-            cursor.execute('SELECT * FROM url_checks ORDER BY created_at DESC')
-            return [dict(row) for row in cursor]
-
-    def create(self, url_id):
+    def save(self, url_id):
         with self.conn.cursor(cursor_factory=DictCursor) as cursor:
             cursor.execute(
                 'INSERT INTO url_checks (url_id) VALUES (%s) RETURNING *',
