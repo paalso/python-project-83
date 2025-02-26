@@ -71,59 +71,54 @@ def urls_post():
     url = data.get('url').strip()
     errors = validate_url(url)
     if errors:
-        return handle_validation_errors(errors, url)
+        return _handle_validation_errors(errors, url)
 
     normalized_url = normalize_url(url)
-    existing_records = urls_repo.find_by_field('name', normalized_url)
+    existing_urls = urls_repo.find_by_field('name', normalized_url)
 
-    if existing_records:
-        existing_record = existing_records[0]
+    if existing_urls:
+        url_info = existing_urls[0]
+        url_checks = urls_checks_repo.get_by_url_id(url_info['id'])
         flash(*FLASH_MESSAGES['url_exists'])
-        return _render_url_page(existing_record)
+        return _render_url_page(url_info, url_checks)
 
     data['url'] = normalized_url
-    created_record = urls_repo.save(data)
+    new_url_record = urls_repo.save(data)
     flash(*FLASH_MESSAGES['url_added'])
-
-    return _render_url_page(created_record)
+    return _render_url_page(new_url_record, [])
 
 
 @routes.post('/urls/<int:id>/checks')
 def create_url_check(id):
     urls_checks_repo.save(id)
     url_info = urls_repo.find(id)
-    url_checks = urls_checks_repo.get_by_url_id(id)
     flash(*FLASH_MESSAGES['url_checked'])
-    return render_template(
-        'url.html',
-        url_info=url_info,
-        url_checks=url_checks,
-        messages = get_flashed_messages(with_categories=True)
-    )
-
-
-# TODO: remove after debugging
-@routes.route('/conn')
-def get_conn():
-    return str(id(conn))
+    url_checks = urls_checks_repo.get_by_url_id(id)
+    return _render_url_page(url_info, url_checks)
 
 
 def _get_form_data():
     return request.form.to_dict()
 
 
-def _render_url_page(url_info):
+def _render_url_page(url_info, url_checks):
     return render_template(
         'url.html',
         url_info=url_info,
+        url_checks=url_checks,
         messages=get_flashed_messages(with_categories=True)
     )
 
 
-def handle_validation_errors(errors, url):
+def _handle_validation_errors(errors, url):
     flash_errors(errors, 'url')
     return render_template(
         'index.html',
         url=url,
         messages=get_flashed_messages(with_categories=True)
     )
+
+# TODO: remove after debugging
+@routes.route('/conn')
+def get_conn():
+    return str(id(conn))
