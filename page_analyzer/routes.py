@@ -52,7 +52,7 @@ def urls_index():
 
 
 @routes.route('/urls/<int:id>')
-def show_url(id):
+def urls_show(id):
     url_info = urls_repo.find(id)
     if not url_info:
         return render_template('not_found_url.html'), 404
@@ -89,7 +89,7 @@ def urls_post():
 
 
 @routes.post('/urls/<int:id>/checks')
-def create_url_check(id):
+def url_checks_post(id):
     urls_checks_repo.save(id)
     url_info = urls_repo.find(id)
     flash(*FLASH_MESSAGES['url_checked'])
@@ -118,7 +118,19 @@ def _handle_validation_errors(errors, url):
         messages=get_flashed_messages(with_categories=True)
     )
 
+
 # TODO: remove after debugging
+
+@routes.route('/checks')
+def checks_index():
+    checks = urls_checks_repo.get_content()
+    return checks
+
+@routes.route('/checks/<int:id>')
+def checks_show(id):
+    check = urls_checks_repo.find(id)
+    return check
+
 @routes.route('/conn')
 def get_conn():
     return str(id(conn))

@@ -1,9 +1,12 @@
 from psycopg2.extras import DictCursor
 
+from page_analyzer.repositories.base_repository import BaseRepository
 
-class UrlChecksRepository:
-    def __init__(self, conn):
-        self.conn = conn
+
+class UrlChecksRepository(BaseRepository):
+    @property
+    def table_name(self):
+        return 'url_checks'
 
     def save(self, url_id):
         with self.conn.cursor(cursor_factory=DictCursor) as cursor:
