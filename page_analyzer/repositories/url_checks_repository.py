@@ -9,20 +9,10 @@ class UrlChecksRepository(BaseRepository):
     def table_name(self):
         return 'url_checks'
 
-    # def save(self, url_id):
-    #     with self.conn.cursor(cursor_factory=DictCursor) as cursor:
-    #         cursor.execute(
-    #             'INSERT INTO url_checks (url_id) VALUES (%s) RETURNING *',
-    #             (url_id,)
-    #         )
-    #         new_record = cursor.fetchone()
-    #         self.conn.commit()
-    #         return new_record
 
     def get_by_url_id(self, url_id):
         with self.conn.cursor(cursor_factory=DictCursor) as cursor:
-            cursor.execute(
-                '''
+            cursor.execute('''
                 SELECT
                   uc.id, uc.status_code, uc.h1, uc.title, uc.description, uc.created_at
                 FROM url_checks uc
@@ -39,7 +29,12 @@ class UrlChecksRepository(BaseRepository):
     def _create(self, entity):
         try:
             with self.conn.cursor(cursor_factory=DictCursor) as cur:
-                cur.execute('INSERT INTO url_checks (url_id) VALUES (%(url_id)s) RETURNING *', entity)
+                cur.execute('''
+                    INSERT INTO url_checks (url_id, status_code)
+                    VALUES (%(url_id)s, %(status_code)s)
+                    RETURNING *''',
+                    entity
+                )
                 new_record = cur.fetchone()
                 self.conn.commit()
             return new_record
