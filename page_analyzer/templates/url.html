@@ -27,7 +27,7 @@
   </div>
   <div class="row mt-5">
     <h2>Проверки</h2>
-    <form method="post" action="{{ url_for('routes.create_url_check', id=url_info.id) }}">
+    <form method="post" action="{{ url_for('routes.url_checks_post', id=url_info.id) }}">
       <input type="submit" class="btn btn-primary" value="Запустить проверку">
     </form>
     <table class="table table-bordered table-hover mt-2" data-test="checks">
