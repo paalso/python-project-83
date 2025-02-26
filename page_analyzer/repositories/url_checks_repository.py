@@ -1,3 +1,4 @@
+import psycopg2
 from psycopg2.extras import DictCursor
 
 from page_analyzer.repositories.base_repository import BaseRepository
@@ -8,15 +9,15 @@ class UrlChecksRepository(BaseRepository):
     def table_name(self):
         return 'url_checks'
 
-    def save(self, url_id):
-        with self.conn.cursor(cursor_factory=DictCursor) as cursor:
-            cursor.execute(
-                'INSERT INTO url_checks (url_id) VALUES (%s) RETURNING *',
-                (url_id,)
-            )
-            new_record = cursor.fetchone()
-            self.conn.commit()
-            return new_record
+    # def save(self, url_id):
+    #     with self.conn.cursor(cursor_factory=DictCursor) as cursor:
+    #         cursor.execute(
+    #             'INSERT INTO url_checks (url_id) VALUES (%s) RETURNING *',
+    #             (url_id,)
+    #         )
+    #         new_record = cursor.fetchone()
+    #         self.conn.commit()
+    #         return new_record
 
     def get_by_url_id(self, url_id):
         with self.conn.cursor(cursor_factory=DictCursor) as cursor:
@@ -33,3 +34,15 @@ class UrlChecksRepository(BaseRepository):
             )
             records = cursor.fetchall()
         return records
+
+
+    def _create(self, entity):
+        try:
+            with self.conn.cursor(cursor_factory=DictCursor) as cur:
+                cur.execute('INSERT INTO url_checks (url_id) VALUES (%(url_id)s) RETURNING *', entity)
+                new_record = cur.fetchone()
+                self.conn.commit()
+            return new_record
+        except psycopg2.Error as e:
+            self.conn.rollback()
+            print(f"Database error: {e}")
