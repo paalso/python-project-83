@@ -5,15 +5,18 @@ from flask import (
     render_template,
     request
 )
+from urllib.parse import urlparse
+
 from page_analyzer.db import get_db
 from page_analyzer.repositories import UrlsRepository, UrlChecksRepository
 from page_analyzer.validator import validate_url
-from urllib.parse import urlparse
+from page_analyzer.services.url_checker import check_url
 
 FLASH_MESSAGES = {
     'url_exists': ('Страница уже существует', 'warning'),
     'url_added': ('Страница успешно добавлена', 'success'),
     'url_checked': ('Страница успешно проверена', 'success'),
+    'url_check_error': ('Произошла ошибка при проверке', 'error'),
 }
 
 
@@ -90,10 +93,16 @@ def urls_post():
 
 @routes.post('/urls/<int:id>/checks')
 def url_checks_post(id):
-    new_check = {'url_id': id}
-    urls_checks_repo.save(new_check)
     url_info = urls_repo.find(id)
-    flash(*FLASH_MESSAGES['url_checked'])
+    url = url_info['name']
+    new_check = {**check_url(url), "url_id": id}
+
+    if new_check['status_code'] is None:
+        flash(*FLASH_MESSAGES['url_check_error'])
+    else:
+        urls_checks_repo.save(new_check)
+        flash(*FLASH_MESSAGES['url_checked'])
+
     url_checks = urls_checks_repo.get_by_url_id(id)
     return _render_url_page(url_info, url_checks)
 
