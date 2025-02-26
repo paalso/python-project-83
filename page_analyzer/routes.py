@@ -90,7 +90,8 @@ def urls_post():
 
 @routes.post('/urls/<int:id>/checks')
 def url_checks_post(id):
-    urls_checks_repo.save(id)
+    new_check = {'url_id': id}
+    urls_checks_repo.save(new_check)
     url_info = urls_repo.find(id)
     flash(*FLASH_MESSAGES['url_checked'])
     url_checks = urls_checks_repo.get_by_url_id(id)
