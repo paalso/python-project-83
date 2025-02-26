@@ -11,18 +11,18 @@
         </div>
          <table class="table table-bordered table-hover text-nowrap" data-test="url">
           <thead>
-          <th style="width: 10%;">ID</th>
-          <th style="width: 50%;">Имя</th>
-          <th style="width: 25%;">Последняя проверка</th>
-          <th style="width: 15%;">Код ответа</th>
+            <th style="width: 10%;">ID</th>
+            <th style="width: 50%;">Имя</th>
+            <th style="width: 25%;">Последняя проверка</th>
+            <th style="width: 15%;">Код ответа</th>
           </thead>
           {% for url in urls %}
-          <tr>
-            <td>{{url.id}}</td>
-            <td><a href="{{ url_for('routes.show_url', id=url.id) }}">{{ url.name }}</a></td>
-            <td>{{url.last_check}}</td>
-            <td>{{url.response_code}}</td>
-          </tr>
+            <tr>
+              <td>{{ url.id }}</td>
+              <td><a href="{{ url_for('routes.show_url', id=url.id) }}">{{ url.name }}</a></td>
+              <td>{{ url.url_last_check_time.strftime('%Y-%m-%d') if url.url_last_check_time else '' }}</td>
+              <td>{{ url.status_code if url.status_code else '' }}</td>
+            </tr>
           {% endfor %}
         </table>
     </div>

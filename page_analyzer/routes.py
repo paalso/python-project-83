@@ -46,9 +46,9 @@ def index():
 
 
 @routes.route('/urls')
-def urls():
-    urls = urls_repo.get_content()
-    return render_template('urls.html', urls=urls)
+def urls_index():
+    urls_with_last_check = urls_repo.get_urls_with_last_check()
+    return render_template('urls.html', urls=urls_with_last_check)
 
 
 @routes.route('/urls/<int:id>')
