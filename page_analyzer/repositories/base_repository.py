@@ -59,9 +59,9 @@ class BaseRepository(ABC):
         :param entity: Dictionary representing the entity to save
         """
         if 'id' in entity and entity['id']:
-            self._update(entity)
+            return self._update(entity)
         else:
-            self._create(entity)
+            return self._create(entity)
 
     def _update(self, entity):
         """Default update logic (can be overridden)."""
@@ -71,7 +71,7 @@ class BaseRepository(ABC):
         """Default create logic (can be overridden)."""
         raise NotImplementedError("Create method is not implemented.")
 
-    def _find_by_field(self, field: str, value):
+    def find_by_field(self, field: str, value):
         if field not in self.ALLOWED_FIELDS:
             raise ValueError(f"Field '{field}' is not allowed for search")
 
