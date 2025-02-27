@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 from page_analyzer.db import get_db
 from page_analyzer.repositories import UrlsRepository, UrlChecksRepository
 from page_analyzer.validator import validate_url
-from page_analyzer.services.url_checker import check_url
+from page_analyzer.services.url_checker import URLChecker
 
 FLASH_MESSAGES = {
     'url_exists': ('Страница уже существует', 'warning'),
@@ -95,7 +95,8 @@ def urls_post():
 def url_checks_post(id):
     url_info = urls_repo.find(id)
     url = url_info['name']
-    new_check = {**check_url(url), "url_id": id}
+    url_checker = URLChecker(url)
+    new_check = url_checker.check() | {'url_id': id}
 
     if new_check['status_code'] is None:
         flash(*FLASH_MESSAGES['url_check_error'])
