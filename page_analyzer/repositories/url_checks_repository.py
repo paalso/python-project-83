@@ -30,8 +30,8 @@ class UrlChecksRepository(BaseRepository):
         try:
             with self.conn.cursor(cursor_factory=DictCursor) as cur:
                 cur.execute('''
-                    INSERT INTO url_checks (url_id, status_code)
-                    VALUES (%(url_id)s, %(status_code)s)
+                    INSERT INTO url_checks (url_id, status_code, h1, title, description)
+                    VALUES (%(url_id)s, %(status_code)s, %(h1)s, %(title)s, %(description)s)
                     RETURNING *''',
                     entity
                 )
