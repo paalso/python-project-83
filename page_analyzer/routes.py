@@ -11,6 +11,7 @@ from page_analyzer.db import get_db
 from page_analyzer.repositories import UrlsRepository, UrlChecksRepository
 from page_analyzer.validator import validate_url
 from page_analyzer.services.url_checker import URLChecker
+import requests
 
 FLASH_MESSAGES = {
     'url_exists': ('Страница уже существует', 'warning'),
@@ -98,7 +99,7 @@ def url_checks_post(id):
     url_checker = URLChecker(url)
     new_check = url_checker.check() | {'url_id': id}
 
-    if new_check['status_code'] is None:
+    if new_check['status_code'] != requests.codes.ok:
         flash(*FLASH_MESSAGES['url_check_error'])
     else:
         urls_checks_repo.save(new_check)
