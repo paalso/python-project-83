@@ -27,4 +27,7 @@ test:
 lint:
 	uv run ruff check
 
+requirements:
+	sed -n '/dependencies = \[/,/\]/p' pyproject.toml | grep -o '"[^"]\+"' | tr -d '"'
+
 check: test lint
