@@ -23,10 +23,11 @@ class URLChecker:
     def _fetch_page(self):
         try:
             response = requests.get(self.url, timeout=TIMEOUT)
+            response.encoding = 'utf-8'
             self.status_code = response.status_code
 
             if response.ok:
-                self.soup = BeautifulSoup(response.text, "html.parser")
+                self.soup = BeautifulSoup(response.text, "html.parser", from_encoding='utf-8')
 
         except requests.RequestException:
             self.status_code = None
