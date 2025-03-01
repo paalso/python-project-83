@@ -28,6 +28,6 @@ lint:
 	uv run ruff check
 
 requirements:
-	sed -n '/dependencies = \[/,/\]/p' pyproject.toml | grep -o '"[^"]\+"' | tr -d '"'
+	sed -n '/dependencies = \[/,/\]/p' pyproject.toml | grep -o '"[^"]\+"' | tr -d '"' > requirements.txt
 
 check: test lint
