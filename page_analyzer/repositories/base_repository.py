@@ -1,5 +1,12 @@
+import psycopg2
+import os
 from psycopg2.extras import DictCursor
 from abc import ABC, abstractmethod
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 class BaseRepository(ABC):
@@ -8,14 +15,6 @@ class BaseRepository(ABC):
     Provides common CRUD-like methods that can be reused in specific repositories.
     """
     ALLOWED_FIELDS = {"id", "name", "created_at"}
-
-    def __init__(self, conn):
-        """
-        Initializes the repository with a database connection.
-
-        :param conn: Database connection object
-        """
-        self.conn = conn
 
     @property
     @abstractmethod
@@ -32,8 +31,8 @@ class BaseRepository(ABC):
 
         :return: List of dictionaries representing table rows
         """
-        with self.conn:
-            with self.conn.cursor(cursor_factory=DictCursor) as cur:
+        with self._get_connection() as conn:
+            with conn.cursor(cursor_factory=DictCursor) as cur:
                 cur.execute(
                     f'''SELECT * FROM {self.table_name}
                         ORDER BY created_at DESC'''
@@ -47,8 +46,8 @@ class BaseRepository(ABC):
         :param id: The ID of the record to find
         :return: Dictionary representing the record, or None if not found
         """
-        with self.conn:
-            with self.conn.cursor(cursor_factory=DictCursor) as cur:
+        with self._get_connection() as conn:
+            with conn.cursor(cursor_factory=DictCursor) as cur:
                 cur.execute(f'SELECT * FROM {self.table_name} WHERE id = %s', (id,))
                 row = cur.fetchone()
                 return dict(row) if row else None
@@ -65,6 +64,18 @@ class BaseRepository(ABC):
         else:
             return self._create(entity)
 
+    def find_by_field(self, field: str, value):
+        if field not in self.ALLOWED_FIELDS:
+            raise ValueError(f"Field '{field}' is not allowed for search")
+
+        with self._get_connection() as conn:
+            with conn.cursor(cursor_factory=DictCursor) as cursor:
+                cursor.execute(f'SELECT * FROM urls WHERE {field} = %s', (value,))
+                return [dict(row) for row in cursor.fetchall()]
+
+    def _get_connection(self):
+        return psycopg2.connect(DATABASE_URL)
+
     def _update(self, entity):
         """Default update logic (can be overridden)."""
         raise NotImplementedError("Update method is not implemented.")
@@ -72,12 +83,3 @@ class BaseRepository(ABC):
     def _create(self, entity):
         """Default create logic (can be overridden)."""
         raise NotImplementedError("Create method is not implemented.")
-
-    def find_by_field(self, field: str, value):
-        if field not in self.ALLOWED_FIELDS:
-            raise ValueError(f"Field '{field}' is not allowed for search")
-
-        with self.conn:
-            with self.conn.cursor(cursor_factory=DictCursor) as cursor:
-                cursor.execute(f'SELECT * FROM urls WHERE {field} = %s', (value,))
-                return [dict(row) for row in cursor.fetchall()]

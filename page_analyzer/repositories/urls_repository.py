@@ -15,8 +15,8 @@ class UrlsRepository(BaseRepository):
 
         :return: List of dictionaries representing enriched URL records.
         """
-        with self.conn:
-            with self.conn.cursor(cursor_factory=DictCursor) as cur:
+        with self._get_connection() as conn:
+            with conn.cursor(cursor_factory=DictCursor) as cur:
                 cur.execute("""
                     SELECT DISTINCT ON (u.id)
                         u.id,
@@ -31,8 +31,8 @@ class UrlsRepository(BaseRepository):
 
     def _create(self, entity):
         try:
-            with self.conn:
-                with self.conn.cursor(cursor_factory=DictCursor) as cur:
+            with self._get_connection() as conn:
+                with conn.cursor(cursor_factory=DictCursor) as cur:
                     cur.execute('INSERT INTO urls (name) VALUES (%(url)s) RETURNING *', entity)
                     new_record = cur.fetchone()
             return new_record

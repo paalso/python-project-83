@@ -9,7 +9,6 @@ from flask import (
 )
 from urllib.parse import urlparse
 
-from page_analyzer.db import get_db
 from page_analyzer.repositories import UrlsRepository, UrlChecksRepository
 from page_analyzer.validator import validate_url
 from page_analyzer.services.url_checker import URLChecker
@@ -40,9 +39,8 @@ def normalize_url(url):
 
 
 routes = Blueprint('routes', __name__)
-conn = get_db()
-urls_repo = UrlsRepository(conn)
-urls_checks_repo = UrlChecksRepository(conn)
+urls_repo = UrlsRepository()
+urls_checks_repo = UrlChecksRepository()
 
 
 @routes.route('/')
@@ -136,7 +134,3 @@ def checks_index():
 def checks_show(id):
     check = urls_checks_repo.find(id)
     return check
-
-@routes.route('/conn')
-def get_conn():
-    return str(id(conn))
