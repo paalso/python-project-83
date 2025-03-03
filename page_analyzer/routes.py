@@ -2,8 +2,10 @@ from flask import (
     Blueprint,
     flash,
     get_flashed_messages,
+    redirect,
     render_template,
-    request
+    request,
+    url_for
 )
 from urllib.parse import urlparse
 
@@ -65,7 +67,8 @@ def urls_show(id):
     return render_template(
         'url.html',
         url_info=url_info,
-        url_checks=url_checks
+        url_checks=url_checks,
+        messages=get_flashed_messages(with_categories=True)
     )
 
 
@@ -82,14 +85,15 @@ def urls_post():
 
     if existing_urls:
         url_info = existing_urls[0]
-        url_checks = urls_checks_repo.get_by_url_id(url_info['id'])
+        url_id = url_info['id']
         flash(*FLASH_MESSAGES['url_exists'])
-        return _render_url_page(url_info, url_checks)
+        return redirect(url_for('routes.urls_show', id=url_id), code=302)
 
     data['url'] = normalized_url
     new_url_record = urls_repo.save(data)
+    url_id = new_url_record['id']
     flash(*FLASH_MESSAGES['url_added'])
-    return _render_url_page(new_url_record, [])
+    return redirect(url_for('routes.urls_show', id=url_id), code=302)
 
 
 @routes.post('/urls/<int:id>/checks')
@@ -105,21 +109,11 @@ def url_checks_post(id):
         urls_checks_repo.save(new_check)
         flash(*FLASH_MESSAGES['url_checked'])
 
-    url_checks = urls_checks_repo.get_by_url_id(id)
-    return _render_url_page(url_info, url_checks)
+    return redirect(url_for('routes.urls_show', id=id), code=302)
 
 
 def _get_form_data():
     return request.form.to_dict()
-
-
-def _render_url_page(url_info, url_checks):
-    return render_template(
-        'url.html',
-        url_info=url_info,
-        url_checks=url_checks,
-        messages=get_flashed_messages(with_categories=True)
-    )
 
 
 def _handle_validation_errors(errors, url):
