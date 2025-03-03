@@ -5,17 +5,20 @@
 {% block content %}
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-10">
       <div class="card bg-light p-3">
         <div class="card-body">
           <h1 class="card-title">Анализатор страниц</h1>
           <p class="lead">Бесплатно проверяйте сайты на SEO-пригодность</p>
           <form class="p-3 rounded" action="{{ url_for('routes.urls_post') }}" method="post">
             <label for="text" class="visually-hidden">Url для проверки</label>
-            <div class="d-flex">
-              <input type="text" class="form-control" id="text" name="url" placeholder="https://www.example.com" value="{{ url }}"
-                required>
-              <input type="submit" class="btn btn-primary ms-3 text-uppercase" value="Проверить">
+            <div class="row">
+              <div class="col-12 col-sm-8 col-lg-9 mb-2 mb-sm-0">
+                <input type="text" class="form-control" id="text" name="url" placeholder="https://www.example.com" value="{{ url }}" required>
+              </div>
+              <div class="col-12 col-sm-4 col-lg-3">
+                <input type="submit" class="btn btn-primary w-100 text-uppercase" value="Проверить">
+              </div>
             </div>
           </form>
         </div>
