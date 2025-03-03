@@ -32,12 +32,13 @@ class BaseRepository(ABC):
 
         :return: List of dictionaries representing table rows
         """
-        with self.conn.cursor(cursor_factory=DictCursor) as cur:
-            cur.execute(
-                f'''SELECT * FROM {self.table_name}
-                    ORDER BY created_at DESC'''
-            )
-            return [dict(row) for row in cur]
+        with self.conn:
+            with self.conn.cursor(cursor_factory=DictCursor) as cur:
+                cur.execute(
+                    f'''SELECT * FROM {self.table_name}
+                        ORDER BY created_at DESC'''
+                )
+                return [dict(row) for row in cur]
 
     def find(self, id):
         """
@@ -46,10 +47,11 @@ class BaseRepository(ABC):
         :param id: The ID of the record to find
         :return: Dictionary representing the record, or None if not found
         """
-        with self.conn.cursor(cursor_factory=DictCursor) as cur:
-            cur.execute(f'SELECT * FROM {self.table_name} WHERE id = %s', (id,))
-            row = cur.fetchone()
-            return dict(row) if row else None
+        with self.conn:
+            with self.conn.cursor(cursor_factory=DictCursor) as cur:
+                cur.execute(f'SELECT * FROM {self.table_name} WHERE id = %s', (id,))
+                row = cur.fetchone()
+                return dict(row) if row else None
 
     def save(self, entity):
         """
@@ -75,6 +77,7 @@ class BaseRepository(ABC):
         if field not in self.ALLOWED_FIELDS:
             raise ValueError(f"Field '{field}' is not allowed for search")
 
-        with self.conn.cursor(cursor_factory=DictCursor) as cursor:
-            cursor.execute(f'SELECT * FROM urls WHERE {field} = %s', (value,))
-            return [dict(row) for row in cursor.fetchall()]
+        with self.conn:
+            with self.conn.cursor(cursor_factory=DictCursor) as cursor:
+                cursor.execute(f'SELECT * FROM urls WHERE {field} = %s', (value,))
+                return [dict(row) for row in cursor.fetchall()]
