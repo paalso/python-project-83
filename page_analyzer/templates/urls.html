@@ -9,21 +9,23 @@
       <h1 class="mt-4">Сайты</h1>
       <div class="table-responsive">
         </div>
-         <table class="table table-bordered table-hover text-nowrap" data-test="url">
+         <table class="table table-bordered table-hover text-nowrap" data-test="urls">
           <thead>
             <th style="width: 10%;">ID</th>
             <th style="width: 50%;">Имя</th>
             <th style="width: 25%;">Последняя проверка</th>
             <th style="width: 15%;">Код ответа</th>
           </thead>
-          {% for url in urls %}
-            <tr>
-              <td>{{ url.id }}</td>
-              <td><a href="{{ url_for('routes.urls_show', id=url.id) }}">{{ url.name }}</a></td>
-              <td>{{ url.url_last_check_time.strftime('%Y-%m-%d') if url.url_last_check_time else '' }}</td>
-              <td>{{ url.status_code if url.status_code else '' }}</td>
-            </tr>
-          {% endfor %}
+           <tbody>
+            {% for url in urls %}
+              <tr>
+                <td>{{ url.id }}</td>
+                <td><a href="{{ url_for('routes.urls_show', id=url.id) }}">{{ url.name }}</a></td>
+                <td>{{ url.url_last_check_time.strftime('%Y-%m-%d') if url.url_last_check_time else '' }}</td>
+                <td>{{ url.status_code if url.status_code else '' }}</td>
+              </tr>
+            {% endfor %}
+           </tbody>
         </table>
     </div>
   </div>
