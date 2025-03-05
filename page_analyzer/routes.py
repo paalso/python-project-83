@@ -87,6 +87,7 @@ def urls_post():
     url = data.get('url').strip()
     errors = validate_url(url)
     if errors:
+        logger.error(f'Incorrect url: {url}')
         flash_errors(errors, 'url')
         return render_template(
             'index.html',
@@ -98,6 +99,7 @@ def urls_post():
     existing_urls = urls_repo.find_by_field('name', normalized_url)
 
     if existing_urls:
+        logger.warning(f'Already existing url: {url}')
         url_info = existing_urls[0]
         url_id = url_info['id']
         flash(*FLASH_MESSAGES['url_exists'])
