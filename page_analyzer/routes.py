@@ -87,7 +87,11 @@ def urls_post():
     errors = validate_url(url)
     if errors:
         flash_errors(errors, 'url')
-        return redirect(url_for('routes.index'), code=422)
+        return render_template(
+        'index.html',
+            url=url,
+        messages=get_flashed_messages(with_categories=True)
+    )
 
     normalized_url = normalize_url(url)
     existing_urls = urls_repo.find_by_field('name', normalized_url)
