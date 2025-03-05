@@ -88,10 +88,10 @@ def urls_post():
     if errors:
         flash_errors(errors, 'url')
         return render_template(
-        'index.html',
+            'index.html',
             url=url,
-        messages=get_flashed_messages(with_categories=True)
-    )
+            messages=get_flashed_messages(with_categories=True)
+        ), 422
 
     normalized_url = normalize_url(url)
     existing_urls = urls_repo.find_by_field('name', normalized_url)
