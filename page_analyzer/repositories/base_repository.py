@@ -12,7 +12,8 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 class BaseRepository(ABC):
     """
     Abstract base class for repositories handling database operations.
-    Provides common CRUD-like methods that can be reused in specific repositories.
+    Provides common CRUD-like methods that can be reused in specific
+    repositories.
     """
     ALLOWED_FIELDS = {"id", "name", "created_at"}
 
@@ -48,14 +49,16 @@ class BaseRepository(ABC):
         """
         with self._get_connection() as conn:
             with conn.cursor(cursor_factory=DictCursor) as cur:
-                cur.execute(f'SELECT * FROM {self.table_name} WHERE id = %s', (id,))
+                cur.execute(
+                    f'SELECT * FROM {self.table_name} WHERE id = %s', (id,))
                 row = cur.fetchone()
                 return dict(row) if row else None
 
     def save(self, entity):
         """
         Saves an entity to the database.
-        If an ID is present, updates the existing record; otherwise, creates a new one.
+        If an ID is present, updates the existing record;
+        otherwise, creates a new one.
 
         :param entity: Dictionary representing the entity to save
         """

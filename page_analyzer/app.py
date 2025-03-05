@@ -1,8 +1,10 @@
-from flask import Flask
-from page_analyzer.routes import routes
-from dotenv import load_dotenv
-import os
 import logging
+import os
+
+from dotenv import load_dotenv
+from flask import Flask
+
+from page_analyzer.routes import routes
 
 
 def create_app():
@@ -10,7 +12,8 @@ def create_app():
     app = Flask(__name__)
     app.secret_key = os.getenv('SECRET_KEY')
 
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
     app.register_blueprint(routes)
     return app

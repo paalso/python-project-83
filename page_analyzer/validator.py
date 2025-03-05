@@ -3,6 +3,7 @@ import validators
 
 MAX_URL_LEN = 255
 
+
 def validate_url(url):
     errors = {}
     if len(url) > MAX_URL_LEN:
