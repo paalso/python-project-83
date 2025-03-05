@@ -1,7 +1,6 @@
-import logging
-
 import requests
 from bs4 import BeautifulSoup
+import logging
 
 TIMEOUT = 5
 
@@ -20,17 +19,10 @@ class URLChecker:
             status_code = response.status_code
 
             if not response.ok:
-                self.logger.warning(
-                    f'Error when requesting {url}: status code {status_code}')
-                return {
-                    'status_code': status_code,
-                    'h1': None,
-                    'title': None,
-                    'description': None
-                }
+                self.logger.warning(f'Error when requesting {url}: status code {status_code}')
+                return {'status_code': status_code, 'h1': None, 'title': None, 'description': None}
 
-            soup = BeautifulSoup(
-                response.text, 'html.parser', from_encoding='utf-8')
+            soup = BeautifulSoup(response.text, 'html.parser', from_encoding='utf-8')
 
             return {
                 'status_code': status_code,
@@ -41,7 +33,7 @@ class URLChecker:
 
         except requests.RequestException as e:
             self.logger.error(f'Error when requesting {url}: {e}')
-            return {'status_code': None}
+            return {'status_code': None, 'h1': None, 'title': None, 'description': None}
 
     def _extract_first_h1_content(self, soup):
         first_h1_tag = soup.find('h1')
