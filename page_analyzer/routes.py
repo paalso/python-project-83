@@ -49,10 +49,14 @@ url_checker = URLChecker(logger)
 urls_repo = UrlsRepository()
 urls_checks_repo = UrlChecksRepository()
 
+
 @routes.route('/')
 @routes.route('/index')
 def index():
-    return render_template('index.html')
+    return render_template(
+        'index.html',
+        messages=get_flashed_messages(with_categories=True)
+    ), 422
 
 
 @routes.route('/urls')
@@ -82,7 +86,8 @@ def urls_post():
     url = data.get('url').strip()
     errors = validate_url(url)
     if errors:
-        return _handle_validation_errors(errors, url)
+        flash_errors(errors, 'url')
+        return redirect(url_for('routes.index'))
 
     normalized_url = normalize_url(url)
     existing_urls = urls_repo.find_by_field('name', normalized_url)
@@ -118,15 +123,6 @@ def url_checks_post(id):
 
 def _get_form_data():
     return request.form.to_dict()
-
-
-def _handle_validation_errors(errors, url):
-    flash_errors(errors, 'url')
-    return render_template(
-        'index.html',
-        url=url,
-        messages=get_flashed_messages(with_categories=True)
-    )
 
 
 # TODO: remove after debugging
