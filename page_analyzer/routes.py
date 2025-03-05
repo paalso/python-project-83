@@ -7,12 +7,13 @@ from flask import (
     request,
     url_for
 )
+import logging
+import requests
 from urllib.parse import urlparse
 
 from page_analyzer.repositories import UrlsRepository, UrlChecksRepository
 from page_analyzer.validator import validate_url
 from page_analyzer.services.url_checker import URLChecker
-import requests
 
 FLASH_MESSAGES = {
     'url_exists': ('Страница уже существует', 'warning'),
@@ -35,13 +36,19 @@ def normalize_url(url):
     if not url_scheme or not url_host:
         return None
 
-    return f"{url_scheme}://{url_host}"
+    normalized_url = f'{url_scheme}://{url_host}'
+    print(normalized_url, url)
+    if url != normalized_url:
+        logger.info(f'URL was normalized: {url} -> {normalized_url}')
+    return normalized_url
 
 
 routes = Blueprint('routes', __name__)
+logger = logging.getLogger(__name__)
+url_checker = URLChecker(logger)
+
 urls_repo = UrlsRepository()
 urls_checks_repo = UrlChecksRepository()
-
 
 @routes.route('/')
 @routes.route('/index')
@@ -98,8 +105,8 @@ def urls_post():
 def url_checks_post(id):
     url_info = urls_repo.find(id)
     url = url_info['name']
-    url_checker = URLChecker(url)
-    new_check = url_checker.check() | {'url_id': id}
+
+    new_check = url_checker.check(url) | {'url_id': id}
 
     if new_check['status_code'] != requests.codes.ok:
         flash(*FLASH_MESSAGES['url_check_error'])
