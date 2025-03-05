@@ -1,3 +1,7 @@
+import logging
+from urllib.parse import urlparse
+
+import requests
 from flask import (
     Blueprint,
     flash,
@@ -5,15 +9,12 @@ from flask import (
     redirect,
     render_template,
     request,
-    url_for
+    url_for,
 )
-import logging
-import requests
-from urllib.parse import urlparse
 
-from page_analyzer.repositories import UrlsRepository, UrlChecksRepository
-from page_analyzer.validator import validate_url
+from page_analyzer.repositories import UrlChecksRepository, UrlsRepository
 from page_analyzer.services.url_checker import URLChecker
+from page_analyzer.validator import validate_url
 
 FLASH_MESSAGES = {
     'url_exists': ('Страница уже существует', 'warning'),
@@ -135,6 +136,7 @@ def _get_form_data():
 def checks_index():
     checks = urls_checks_repo.get_content()
     return checks
+
 
 @routes.route('/checks/<int:id>')
 def checks_show(id):
