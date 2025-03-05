@@ -19,7 +19,7 @@ psql-connect:
 	psql -U postgres -h localhost -d test -W
 
 routes:
-	uv run flask routes
+	uv run flask --app page_analyzer:app routes
 
 test:
 	uv run pytest
