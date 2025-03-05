@@ -33,7 +33,10 @@ class UrlsRepository(BaseRepository):
         try:
             with self._get_connection() as conn:
                 with conn.cursor(cursor_factory=DictCursor) as cur:
-                    cur.execute('INSERT INTO urls (name) VALUES (%(url)s) RETURNING *', entity)
+                    cur.execute('''
+                      INSERT INTO urls (name)
+                      VALUES (%(url)s) RETURNING *
+                    ''', entity)
                     new_record = cur.fetchone()
             return new_record
         except psycopg2.Error as e:

@@ -1,6 +1,5 @@
 import validators
 
-
 MAX_URL_LEN = 255
 
 

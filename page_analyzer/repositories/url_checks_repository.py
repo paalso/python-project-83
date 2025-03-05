@@ -14,7 +14,8 @@ class UrlChecksRepository(BaseRepository):
             with conn.cursor(cursor_factory=DictCursor) as cur:
                 cur.execute('''
                     SELECT
-                      uc.id, uc.status_code, uc.h1, uc.title, uc.description, uc.created_at
+                      uc.id, uc.status_code, uc.h1,
+                      uc.title, uc.description, uc.created_at
                     FROM url_checks uc
                     INNER JOIN urls u
                     ON u.id = uc.url_id

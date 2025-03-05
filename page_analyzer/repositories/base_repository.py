@@ -1,8 +1,9 @@
-import psycopg2
 import os
-from psycopg2.extras import DictCursor
 from abc import ABC, abstractmethod
+
+import psycopg2
 from dotenv import load_dotenv
+from psycopg2.extras import DictCursor
 
 load_dotenv()
 
@@ -73,7 +74,8 @@ class BaseRepository(ABC):
 
         with self._get_connection() as conn:
             with conn.cursor(cursor_factory=DictCursor) as cursor:
-                cursor.execute(f'SELECT * FROM urls WHERE {field} = %s', (value,))
+                cursor.execute(
+                    f'SELECT * FROM urls WHERE {field} = %s', (value,))
                 return [dict(row) for row in cursor.fetchall()]
 
     def _get_connection(self):
