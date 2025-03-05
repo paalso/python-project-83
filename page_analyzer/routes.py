@@ -37,7 +37,6 @@ def normalize_url(url):
         return None
 
     normalized_url = f'{url_scheme}://{url_host}'
-    print(normalized_url, url)
     if url != normalized_url:
         logger.info(f'URL was normalized: {url} -> {normalized_url}')
     return normalized_url
