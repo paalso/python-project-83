@@ -1,23 +1,16 @@
 #!/usr/bin/env bash
 
-# Usage:
-#   ./build.sh [database_engine]
+# ------------------------------------------------------------------------------
+# build.sh - Setup script for the project
 #
-# Arguments:
-#   database_engine - optional, "postgres" or "sqlite" (default: sqlite)
+# Usage:
+#   ./build.sh
 #
 # Description:
-#   - Installs uv if not already installed
-#   - Installs project dependencies using `make install`
-#   - Initializes the database (PostgreSQL or SQLite) using `database.sql`
-# 
-# Example usage:
-# For SQLite (default):
-# ./build.sh
-# 
-# For PostgreSQL:
-# ./build.sh postgres
-
+#   - Checks for `uv` (Python package manager); installs it if missing
+#   - Installs dependencies via Makefile
+#   - Initializes PostgreSQL database using `psql` and the DATABASE_URL
+# ------------------------------------------------------------------------------
 
 # Check if `uv` is installed; install if missing
 if ! command -v uv &> /dev/null
@@ -31,23 +24,5 @@ fi
 # Install dependencies using Makefile
 make install
 
-# Determine database engine (default: sqlite)
-DB_ENGINE="${1:-sqlite}"
-
-# Initialize database
-case "$DB_ENGINE" in
-    postgres)
-        echo "Initializing PostgreSQL database..."
-        psql -a -d "$DATABASE_URL" -f database.sql
-        ;;
-    sqlite)
-        echo "Initializing SQLite database..."
-        DB_PATH=$(echo "$DATABASE_URL" | sed 's|sqlite:///||')
-        sqlite3 "$DB_PATH" < database.sql
-        ;;
-    *)
-        echo "Unknown database engine: $DB_ENGINE"
-        echo "Usage: ./build.sh [postgres|sqlite]"
-        exit 1
-        ;;
-esac
+# Initialize PostgreSQL database
+psql -a -d $DATABASE_URL -f database.sql
