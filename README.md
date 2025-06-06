@@ -11,6 +11,9 @@ App link: [https://python-project-83-2v62.onrender.com](https://python-project-8
 
 Page Analyzer is a lightweight SEO tool designed to assess web pages for key SEO elements. It enables users to check URLs, store them in a database, and analyze page content. While its functionality is minimalistic, the application provides essential insights by verifying page accessibility and extracting crucial metadata, including the first-level heading (`<h1>`), page title (`<title>`), and meta description (`<meta name="description">`). All analysis results are securely stored in the database for future reference.
 
+#### Note:
+Currently, the project supports only PostgreSQL as the database. The database interaction logic relies on the psycopg2 library and PostgreSQL-specific SQL syntax, so support for other databases like SQLite is not implemented at this stage.
+
 ### Project setup
 
 1. Clone the repository
@@ -47,17 +50,17 @@ or run with `gunicorn`
 make run
 ```
 
+When deploying the application on [render.com](https://render.com/), encountered difficulties in the project insallation with `uv`. That's why deployment to render.com is done using these
+
+#### Deployment settings:
+
+Build Command: `pip install -r requirements.txt && psql -a -d $DATABASE_URL -f database.sql`
+
+Start Command: `gunicorn page_analyzer:app`
+
 #### Useful links
 [render.com — Flask app deploy](https://render.com/docs/deploy-flask)
 
 [render.com - Postgres](https://render.com/docs/postgresql-creating-connecting)
 
 [render.com - my dashboard](https://dashboard.render.com/)
-
-When deploying the application on [render.com](https://render.com/), encountered difficulties in the project insallation with `uv`. That's why deployment to render.com is done using these
-##### Deployment settings:
-
-Build Command: `pip install -r requirements.txt && psql -a -d $DATABASE_URL -f database.sql`
-
-Start Command: `gunicorn page_analyzer:app`
-
