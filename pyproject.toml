@@ -4,9 +4,9 @@ version = "0.1.0"
 description = """Page Analyzer is a lightweight SEO tool designed to assess
  web pages for key SEO elements. Enables users to check URLs, store them
   in a database, and analyze page content.
-"""
+"""```
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 dependencies = [
     "beautifulsoup4>=4.13.3",
     "flask>=3.1.0",
