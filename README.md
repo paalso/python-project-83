@@ -60,7 +60,7 @@ At the moment the app is configured to connect to a remote PostgreSQL database h
 
 #### [Render](render.com) version:
 
-[https://python-project-83-2v62.onrender.com](https://python-project-83-2v62.onrender.com) - expired :unamused
+[https://python-project-83-2v62.onrender.com](https://python-project-83-2v62.onrender.com) - expired :unamused:
 
 When deploying the application on [Render](https://render.com/), encountered difficulties in the project insallation with `uv`. That's why deployment to render.com is done using these
 
