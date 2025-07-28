@@ -1,5 +1,4 @@
 ### Hexlet tests and linter status:
-[![Actions Status](https://github.com/paalso/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/paalso/python-project-83/actions) 
 [![lint](https://github.com/paalso/python-project-83/actions/workflows/lint.yml/badge.svg)](https://github.com/paalso/python-project-83/actions/workflows/lint.yml)
 
 ## Level 3 project on [Hexlet](https://ru.hexlet.io/), program [Python developer](https://ru.hexlet.io/programs/python).
@@ -49,8 +48,21 @@ or run with `gunicorn`
 ```
 make run
 ```
+### Demo
 
-When deploying the application on [render.com](https://render.com/), encountered difficulties in the project insallation with `uv`. That's why deployment to render.com is done using these
+#### [Railway](https://railway.com) version
+
+Live demo deployed on Railway: 👉 [https://paalso.pythonanywhere.com/](https://python-project-83-production-cd6e.up.railway.app/)
+
+Available until 27 August 2025
+
+At the moment the app is configured to connect to a remote PostgreSQL database hosted on [Supabase](https://supabase.com).
+
+#### [Render](render.com) version:
+
+[https://python-project-83-2v62.onrender.com](https://python-project-83-2v62.onrender.com) - expired :unamused
+
+When deploying the application on [Render](https://render.com/), encountered difficulties in the project insallation with `uv`. That's why deployment to render.com is done using these
 
 #### Deployment settings:
 
