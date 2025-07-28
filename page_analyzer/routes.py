@@ -144,3 +144,11 @@ def checks_index():
 def checks_show(id):
     check = urls_checks_repo.find(id)
     return check
+
+
+@routes.route('/__debug__/info')
+def debug_info():
+    from flask import jsonify
+
+    from page_analyzer.services.utils import get_debug_info
+    return jsonify(get_debug_info())
