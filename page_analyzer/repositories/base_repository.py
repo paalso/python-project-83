@@ -1,11 +1,11 @@
-from abc import ABC, abstractmethod
-from dotenv import load_dotenv
 import logging
+from abc import ABC, abstractmethod
+
 import psycopg2
 from psycopg2.extras import DictCursor
 
 from page_analyzer.db import DATABASE_URL
-from page_analyzer.services.utils import parse_db_url
+from page_analyzer.services.parse_url import parse_db_url
 
 logger = logging.getLogger(__name__)
 
