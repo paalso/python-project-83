@@ -1,13 +1,16 @@
-import os
+import logging
 from abc import ABC, abstractmethod
 
 import psycopg2
 from dotenv import load_dotenv
 from psycopg2.extras import DictCursor
 
-load_dotenv()
+from page_analyzer.db import DATABASE_URL
+from page_analyzer.services.utils import parse_db_url
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+logger = logging.getLogger(__name__)
+
+load_dotenv()
 
 
 class BaseRepository(ABC):
@@ -79,7 +82,17 @@ class BaseRepository(ABC):
                 return [dict(row) for row in cursor.fetchall()]
 
     def _get_connection(self):
-        return psycopg2.connect(DATABASE_URL)
+        try:
+            db_info = parse_db_url(DATABASE_URL)
+            logger.info(
+                f"🛢️ Connected to DB on host: {db_info['hostname']}, "
+                f"port: {db_info['port']}, db: {db_info['dbname']}, "
+                f"user: {db_info['username']}"
+            )
+            return psycopg2.connect(DATABASE_URL)
+        except Exception as e:
+            logger.error(f'🚫 Failed to connect to the database: {e}')
+            raise
 
     def _update(self, entity):
         """Default update logic (can be overridden)."""
