@@ -9,8 +9,14 @@ from page_analyzer.services.parse_url import parse_db_url
 logger = logging.getLogger(__name__)
 
 load_dotenv()
-DATABASE_URL = os.getenv('DATABASE_URL')
 
+# ⚠️ WARNING: DO NOT COMMIT THIS TO A PUBLIC REPOSITORY!
+SUPABASE_URL = (
+    'postgresql://postgres.ibutfbecxtsbppboybvb:ckvvwKYNPKgIsLgN@'
+    'aws-0-eu-north-1.pooler.supabase.com:6543/postgres'
+)
+
+DATABASE_URL = os.getenv('DATABASE_URL') or SUPABASE_URL
 
 conn = None
 
