@@ -4,8 +4,6 @@
 ## Level 3 project on [Hexlet](https://ru.hexlet.io/), program [Python developer](https://ru.hexlet.io/programs/python).
 ### [Анализатор страниц (Page Analyzer)](https://ru.hexlet.io/programs/python/projects/83)
 
-App link: [https://paalso.pythonanywhere.com/](https://paalso.pythonanywhere.com/)
-
 ### Project description
 
 Page Analyzer is a lightweight SEO tool designed to assess web pages for key SEO elements. It enables users to check URLs, store them in a database, and analyze page content. While its functionality is minimalistic, the application provides essential insights by verifying page accessibility and extracting crucial metadata, including the first-level heading (`<h1>`), page title (`<title>`), and meta description (`<meta name="description">`). All analysis results are securely stored in the database for future reference.
@@ -50,9 +48,9 @@ make run
 ```
 ### Demo
 
-#### [Railway](https://railway.com) version
+#### [Railway](https://railway.com) version:
 
-Live demo deployed on Railway: 👉 [https://paalso.pythonanywhere.com/](https://python-project-83-production-cd6e.up.railway.app/)
+[https://python-project-83-production-cd6e.up.railway.app](https://python-project-83-production-cd6e.up.railway.app) - expired :unamused:
 
 Available until 27 August 2025
 
